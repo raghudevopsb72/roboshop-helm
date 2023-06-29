@@ -20,6 +20,10 @@ spec:
       labels:
         {{- include "roboshop.selectorLabels" . | nindent 8 }}
     spec:
+      volumes:
+      - name: params-volume
+        emptyDir:
+          sizeLimit: 5Mi
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
@@ -27,7 +31,7 @@ spec:
       serviceAccountName: {{ .Values.appName }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
-      initContainers
+      initContainers:
         - name: aws-ssm-pm
           image: 633788536644.dkr.ecr.us-east-1.amazonaws.com/aws-parameter-store:latest
           imagePullPolicy: Always
